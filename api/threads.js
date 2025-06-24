@@ -22,6 +22,14 @@ export default async function handler(request, response) {
   const fields = 'id,username,threads_profile_picture_url';
   const apiUrl = `https://graph.threads.net/v1.0/me?fields=${fields}&access_token=${accessToken}`;
 
+  // --- DEBUGGING STEP ---
+  // 暫時不發送請求，而是直接回傳我們組合好的 API URL，用來檢查它是否正確
+  return response.status(200).json({
+    debug_message: "這是即將要呼叫的 API 網址",
+    url: apiUrl
+  });
+  // --- END DEBUGGING STEP ---
+
   try {
     // 使用 fetch 向 Threads API 發送請求
     const apiResponse = await fetch(apiUrl);
