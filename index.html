@@ -30,10 +30,18 @@
             // Vercel 會自動將 /api/threads.js 檔案對應到 /api/threads 這個網址
             fetch('/api/threads')
                 .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP 錯誤！ 狀態: ${response.status}`);
-                    }
-                    return response.json();
+                    // 首先，無論成功或失敗，都嘗試解析 JSON 回應
+                    // 因為我們的後端在出錯時也會回傳 JSON 格式的錯誤訊息
+                    return response.json().then(data => {
+                        // 如果回應不成功 (status code 不是 2xx)
+                        if (!response.ok) {
+                            // 將包含詳細資料的物件拋出為錯誤
+                            // 這樣 catch 區塊就能抓到它
+                            return Promise.reject(data);
+                        }
+                        // 如果成功，就回傳資料
+                        return data;
+                    });
                 })
                 .then(data => {
                     // 將收到的 JSON 資料格式化後顯示出來
@@ -41,7 +49,9 @@
                 })
                 .catch(error => {
                     console.error('擷取資料時發生錯誤:', error);
-                    resultElement.textContent = `發生錯誤: ${error.message}`;
+                    // 現在的 error 物件會是後端傳來的 JSON，例如 { error: "..." }
+                    // 我們把它格式化後顯示出來，方便除錯
+                    resultElement.textContent = `後端伺服器發生錯誤:\n\n${JSON.stringify(error, null, 2)}`;
                 });
         });
     </script>
