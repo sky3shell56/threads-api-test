@@ -1,5 +1,6 @@
 // Vercel Serverless Function
 // 檔案路徑: /api/threads.js
+// 強制更新以觸發 Git 偵測 (Force update to trigger Git detection)
 
 // 這個函式會處理所有對 /api/threads 的請求
 // 我們加上 async 關鍵字，因為我們要使用 await fetch
