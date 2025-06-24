@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Threads API 測試</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; padding: 20px; max-width: 600px; margin: auto; }
+        h1 { color: #333; }
+        button { background-color: #007bff; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-size: 16px; }
+        button:hover { background-color: #0056b3; }
+        #result { margin-top: 20px; padding: 15px; background-color: #f2f2f2; border: 1px solid #ddd; border-radius: 5px; white-space: pre-wrap; word-wrap: break-word; }
+    </style>
+</head>
+<body>
+
+    <h1>Threads API 測試頁面</h1>
+    <p>點擊下方的按鈕來向您的 Vercel 後端發送請求。</p>
+
+    <button id="fetchButton">取得 Threads 資料 (模擬)</button>
+
+    <h2>API 回應:</h2>
+    <pre id="result">尚未發送請求...</pre>
+
+    <script>
+        document.getElementById('fetchButton').addEventListener('click', () => {
+            const resultElement = document.getElementById('result');
+            resultElement.textContent = '正在載入中...';
+
+            // Vercel 會自動將 /api/threads.js 檔案對應到 /api/threads 這個網址
+            fetch('/api/threads')
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP 錯誤！ 狀態: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    // 將收到的 JSON 資料格式化後顯示出來
+                    resultElement.textContent = JSON.stringify(data, null, 2);
+                })
+                .catch(error => {
+                    console.error('擷取資料時發生錯誤:', error);
+                    resultElement.textContent = `發生錯誤: ${error.message}`;
+                });
+        });
+    </script>
+
+</body>
+</html> 
